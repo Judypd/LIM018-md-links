@@ -1,4 +1,4 @@
-const fileAndPath = require('../filesAndPaths.js');
+const fileAndPath = require('../src/filesAndPaths.js');
 
 describe('existPath', () => {
     it('should verify if the path exist', () => {

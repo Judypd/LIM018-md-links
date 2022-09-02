@@ -1,16 +1,20 @@
 {
   "name": "md-links",
   "version": "0.1.0",
+  "author": "Carolina Palacios <tu@email.com>",
   "engines": {
     "node": ">=16.x"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest --coverage --verbose"
   },
   "devDependencies": {
     "@babel/core": "^7.18.13",
     "@babel/preset-env": "^7.18.10",
     "babel-jest": "^29.0.1",
     "jest": "^29.0.1"
+  },
+  "dependencies": {
+    "axios": "^0.27.2"
   }
 }

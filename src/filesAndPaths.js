@@ -4,20 +4,23 @@ const path = require('path');
 
 const myAbsolutePth = 'C:/Users/Carola/OneDrive/Escritorio/Laboratoria/LIM018-md-links/pruebas/prueba.md';
 
+// verificar si la ruta existe
 const existPath = (route) => fs.existsSync(route);
-console.log(existPath(myAbsolutePth));
 
+//verificar si la ruta es absoluta y si no, convertir a absoluta
 const checkAbsolutePath = (route) => path.isAbsolute(route);
-console.log(checkAbsolutePath(myAbsolutePth));
 
-const fromRelativeToAbsolutePath = (route) => path.resolve(route)
-console.log(fromRelativeToAbsolutePath('./pruebas/prueba.md'));
+const toAbsolutePath = (route) => {
+ return checkAbsolutePath(route) === false ? path.resolve(route) : route;
+}
+console.log(toAbsolutePath('./pruebas/prueba.md'));
 
+// verificar que archivo tenga extensión .md
 const extensionPath = (route) => path.extname(route);
-console.log(extensionPath('./pruebas/prueba.md'));
 
 const readFile = (route) => fs.readFileSync(route, 'utf-8');
 
+// extraer links presentes en archivo .md
 const findLinks = (route) => {
     const matcher = /\[(.*?)\]\(.*?\)/gm;
     let groupOfLinks = [];
@@ -33,16 +36,16 @@ const findLinks = (route) => {
         const link = { href, text, file };
         groupOfLinks.push(link);
         // console.log(link,'objeto');
-    })
-    // console.log(groupOfLinks,'array');
+    });
+    console.log(groupOfLinks,'array');
     return groupOfLinks;
-}    
-console.log(findLinks('./pruebas/readmePrueba.md'), 'ultimo');
+};    
+// console.log(findLinks('./pruebas/readmePrueba.md'), 'ultimo');
 
 module.exports = {
     existPath,
-    checkAbsolutePath,
-    fromRelativeToAbsolutePath,
+    extensionPath,
+    toAbsolutePath,
     readFile,
     findLinks,
 }
