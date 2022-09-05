@@ -1,18 +1,22 @@
-const filesAndPaths = require('./src/filesAndPaths.js')
+const {
+  existPath,
+  extensionPath,
+  toAbsolutePath,
+  findLinks
+} = require('./src/filesAndPaths.js')
 
 const mdLinks = (path, options) => {
-  new Promise((resolve, reject) => {
-    if(filesAndPaths.existPath(path) === false){
-      reject('La ruta ingresada no es válida')
+  return new Promise((resolve, reject) => {
+    if (existPath(path) === false) {
+      reject(new Error('La ruta ingresada no es válida'))
     }
-    if(filesAndPaths.extensionPath(filesAndPaths.toAbsolutePath(path)) === '.md'){
-      filesAndPaths.findLinks(filesAndPaths.toAbsolutePath(path));
+    if (extensionPath(toAbsolutePath(path)) === '.md') {
+      resolve(findLinks(toAbsolutePath(path)))
     }
-    resolve('algo')
-    
+    // resolve('algo')
   })
-};
+}
 
-mdLinks('./pruebas/prueba.md').then((res) => console.log(res)).catch(console.log)
-// console.log(filesAndPaths.findLinks('./pruebas/readmePrueba.md')[1].href);
-module.exports = mdLinks;
+mdLinks('./pruebas/readmePrueba.md').then((res) => console.log(res)).catch(console.log)
+// console.log(findLinks('./pruebas/readmePrueba.md')[1].href);
+module.exports = mdLinks
