@@ -2,21 +2,32 @@ const {
   existPath,
   extensionPath,
   toAbsolutePath,
-  findLinks
-} = require('./src/filesAndPaths.js')
+  findLinks,
+  validateLinks
+} = require('./src/filesAndPaths.js');
 
 const mdLinks = (path, options) => {
   return new Promise((resolve, reject) => {
     if (existPath(path) === false) {
-      reject(new Error('La ruta ingresada no es válida'))
+      return console.log('La ruta ingresada no existe, porfavor ingrese una ruta válida');
     }
-    if (extensionPath(toAbsolutePath(path)) === '.md') {
-      resolve(findLinks(toAbsolutePath(path)))
+    if (extensionPath(toAbsolutePath(path)) !== '.md') {
+      return console.log('No hay archivos con extensión .md');
     }
-    // resolve('algo')
-  })
-}
+    if (findLinks(toAbsolutePath(path)) === []) {
+      return console.log('No se encontraron links en el archivo');
+    } else {
+      if (options.validate === false) {
+        console.log('validate false');
+        resolve(findLinks(toAbsolutePath(path)));
+      } else {
+        console.log('validate true');
+        resolve(validateLinks(toAbsolutePath(path)));
+      }
+    }
+  });
+};
 
-mdLinks('./pruebas/readmePrueba.md').then((res) => console.log(res)).catch(console.log)
-// console.log(findLinks('./pruebas/readmePrueba.md')[1].href);
-module.exports = mdLinks
+mdLinks('./pruebas/readmePrueba.md', { validate: true }).then((res) => console.log(res, 'mdlinks')).catch(console.log);
+
+module.exports = mdLinks;

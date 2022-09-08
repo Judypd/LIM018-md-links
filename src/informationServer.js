@@ -1,15 +1,14 @@
-const axios = require('axios')
+const axios = require('axios');
 
 const infoServer = (url) => new Promise((resolve, reject) => {
   axios.get(url)
     .then((response) => {
-      resolve(response)
+      resolve(response);
     })
     .catch((err) => {
-      console.log('el error', err)
-      reject(err)
-    })
-})
-infoServer('https://es.wikipedia.org/wiki/Markdown').then(console.log).catch(console.log)
+      reject(err);
+    });
+});
+infoServer('https://es.wikipedia.org/wiki/Markdown').then((res) => console.log('petición HTTP', res.status, res.statusText)).catch(console.log)
 
-module.export = infoServer
+module.exports = infoServer;

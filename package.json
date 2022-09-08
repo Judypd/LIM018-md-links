@@ -6,6 +6,7 @@
     "node": ">=16.x"
   },
   "scripts": {
+    "start": "node index.js",
     "test": "jest --coverage --verbose"
   },
   "devDependencies": {
