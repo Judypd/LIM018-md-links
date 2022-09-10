@@ -25,7 +25,6 @@ const findLinks = (route) => {
 
   const linksInFile = readFile(route).match(matcher);
   if (linksInFile === null) {
-    console.log('No se encontraron links en el archivo');
     return [];
   }
   linksInFile.forEach((elem) => {
