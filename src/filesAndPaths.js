@@ -2,8 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const infoServer = require('./informationServer.js');
 
-// const myAbsolutePth = 'C:/Users/Carola/OneDrive/Escritorio/Laboratoria/LIM018-md-links/pruebas/prueba.md'
-
 // Función para verificar si la ruta existe
 const existPath = (route) => fs.existsSync(route);
 
@@ -27,6 +25,7 @@ const findLinks = (route) => {
 
   const linksInFile = readFile(route).match(matcher);
   if (linksInFile === null) {
+    console.log('No se encontraron links en el archivo');
     return [];
   }
   linksInFile.forEach((elem) => {
@@ -34,51 +33,62 @@ const findLinks = (route) => {
     const matchHttp = parentheses.exec(elem);
     const href = matchHttp[1];
     const text = elem.slice(1, elem.indexOf(']'));
+    const correctText = text.length > 50 ? text.slice(0, 51) : text;
     const file = route;
 
-    const link = { href, text, file };
+    const link = {
+      href,
+      text: correctText,
+      file
+    };
     groupOfLinks.push(link);
   });
   return groupOfLinks;
 };
 
 // Función que ingresa el resultado de petición http, en el array de objetos
-const validateLinks = (route) => {
-  const groupedLinks = findLinks(route);
-  const arrPromises = [];
-
-  groupedLinks.forEach((link) => {
-    arrPromises.push(infoServer(link.href).then((res) => {
-      link.status = res.status;
-      res.status >= 200 && res.status < 400
-        ? link.ok = res.statusText
-        : link.ok = 'Fail';
-    }).catch((err) => {
-      link.status = err.code;
+const validateLinks = (arrayLinks) => {
+  const groupedLinks = arrayLinks.map(async link => {
+    try {
+      const result = await infoServer(link.href);
+      link.status = result.status;
+      link.ok = result.statusText;
+      return link;
+    } catch (e) {
+      link.status = 502;
       link.ok = 'Fail';
-    }));
+      return link;
+    }
   });
-  return (Promise.all(arrPromises).then(() => groupedLinks));
+  return Promise.all(groupedLinks);
+};
+// validateLinks('./pruebas/readmePrueba.md').then(res => console.log(res, 'inValidL'));
+
+// funciones para representar estadísticas del total de links encontrados
+const stats = (arrOfObj) => {
+  const result = {};
+  const totalLinks = arrOfObj.map(link => link.href);
+  const uniqueLinks = [...new Set(totalLinks)];
+
+  result.Total = totalLinks.length;
+  result.Unique = uniqueLinks.length;
+  return result;
 };
 
-console.log(validateLinks('./pruebas/readmePrueba.md'), 'validL');
+const brokenStats = (stat, arrOfObj) => {
+  const broken = arrOfObj.filter(link => link.ok === 'Fail');
+  stat.Broken = broken.length;
+  return stat;
+};
+// console.log(stats(arrObj));
+// console.log(brokenStats(stats(arrObj), arrObj));
 
-// const stats = (arrOfObj) => {
-//   const result = {};
-//   const totalLinks = arrOfObj.then((res) => res.map(link => link.href));
-//   console.log(totalLinks);
-//   const uniqueLinks = [...new Set(totalLinks)];
-
-//   result.total = totalLinks.length;
-//   result.unique = uniqueLinks.length;
-//   return result;
-// };
-// console.log(validateLinks('./pruebas/readmePrueba.md'));
-// console.log(stats(validateLinks('./pruebas/readmePrueba.md')));
 module.exports = {
   existPath,
-  extensionPath,
   toAbsolutePath,
+  extensionPath,
   findLinks,
-  validateLinks
+  validateLinks,
+  stats,
+  brokenStats
 };

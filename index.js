@@ -3,31 +3,42 @@ const {
   extensionPath,
   toAbsolutePath,
   findLinks,
-  validateLinks
+  validateLinks,
+  stats,
+  brokenStats
 } = require('./src/filesAndPaths.js');
 
 const mdLinks = (path, options) => {
   return new Promise((resolve, reject) => {
+    const linksInArray = findLinks(toAbsolutePath(path));
+
     if (existPath(path) === false) {
-      return console.log('La ruta ingresada no existe, porfavor ingrese una ruta válida');
+      reject(new Error('La ruta ingresada no existe, porfavor ingrese una ruta válida'));
     }
     if (extensionPath(toAbsolutePath(path)) !== '.md') {
-      return console.log('No hay archivos con extensión .md');
+      reject(new Error('No hay archivos con extensión .md'));
+      // return console.log('No hay archivos con extensión .md');
     }
-    if (findLinks(toAbsolutePath(path)) === []) {
-      return console.log('No se encontraron links en el archivo');
+    if (linksInArray === []) {
+      reject(new Error());
     } else {
+      if (options.validate === true && options.stats === true) {
+        resolve(validateLinks(linksInArray).then((result) => brokenStats(stats(result), result)));
+      }
+      if (options.stats === true) {
+        resolve(validateLinks(linksInArray).then((result) => stats(result)));
+      }
       if (options.validate === false) {
-        console.log('validate false');
-        resolve(findLinks(toAbsolutePath(path)));
+        resolve(linksInArray);
       } else {
-        console.log('validate true');
-        resolve(validateLinks(toAbsolutePath(path)));
+        resolve(validateLinks(linksInArray));
       }
     }
   });
 };
 
-mdLinks('./pruebas/readmePrueba.md', { validate: true }).then((res) => console.log(res, 'mdlinks')).catch(console.log);
+mdLinks('./directory/file/prueba1.md', { validate: true })
+  .then((res) => console.log(res, 'mdlinks'))
+  .catch((e) => console.log(e.message, 'errorMdLink'));
 
 module.exports = mdLinks;

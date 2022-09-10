@@ -9,6 +9,6 @@ const infoServer = (url) => new Promise((resolve, reject) => {
       reject(err);
     });
 });
-infoServer('https://es.wikipedia.org/wiki/Markdown').then((res) => console.log('petición HTTP', res.status, res.statusText)).catch(console.log)
+// infoServer('https://es.wikipedia.org/wiki/Markdown').then((res) => console.log('petición HTTP', res.status, res.statusText)).catch(console.log)
 
 module.exports = infoServer;
