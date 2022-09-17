@@ -1,20 +1,43 @@
 {
-  "name": "md-links",
+  "name": "md-links-judypd",
   "version": "0.1.0",
-  "author": "Carolina Palacios <palacios.carolina0@gmail.com>",
+  "description": "librería para buscar links y su estado de validez o error en documentos markdow",
+  "author": {
+    "name": "Carolina Palacios <palacios.carolina0@gmail.com>",
+    "url": "https://github.com/Judypd"
+  },
   "engines": {
     "node": ">=16.x"
   },
   "scripts": {
     "start": "node index.js",
     "eslint": "eslint --ext .js src/ test/",
-    "pretest-": "npm run eslint",
+    "pretest": "npm run eslint",
     "test": "jest --coverage --verbose"
+  },
+  "bin": {
+    "md-links": "./src/cli.js"
+  },
+  "keywords": [
+    "javascript",
+    "nodejs",
+    "node",
+    "markdown"
+  ],
+  "homepage": "https://github.com/Judypd/LIM018-md-links#readme",
+  "bugs": {
+    "url": "https://github.com/Judypd/LIM018-md-links/issues",
+    "email": "palacios.carolina0@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/npm/cli.git.CAMBIAR"
   },
   "devDependencies": {
     "@babel/core": "^7.18.13",
     "@babel/preset-env": "^7.18.10",
     "babel-jest": "^29.0.1",
+    "chalk": "^4.1.2",
     "eslint": "^8.23.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
