@@ -12,7 +12,7 @@ describe('mdLinks', () => {
 
   it('Should show an error message if can not find .md document extension', () => {
     const noMd = './pruebas/archivo.txt';
-    mdLinks(noMd).catch(error => expect(error.message).toBe('No hay archivos con extensión .md'));
+    mdLinks(noMd).catch(error => expect(error.message).toBe('No se encontraron archivos con extensión .md'));
   });
 
   it('If validate and stats are true, should return promise resolve with total, unique and broken links', () => {

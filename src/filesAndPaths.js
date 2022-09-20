@@ -1,7 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const infoServer = require('./informationServer.js');
+const chalk = require('chalk');
 
+// const rutaDir = './directory/file';
 // Función para verificar si la ruta existe
 const existPath = (route) => fs.existsSync(route);
 
@@ -12,19 +14,49 @@ const toAbsolutePath = (route) => {
   return checkAbsolutePath(route) === false ? path.resolve(route) : route;
 };
 
-// Función que muestra la extensión de un archivo
+// Función que muestra la EXTENSIÓN de un archivo
 const extensionPath = (route) => path.extname(route);
 
-// Función para leer un archivo
-const readFile = (route) => fs.readFileSync(route, 'utf-8');
+// Función para validar si se trata de un DIRECTORIO
+const isADirectory = (route) => fs.statSync(route).isDirectory(); // true o false
 
-// extraer links presentes en archivo .md
+// Función para leer un directorio
+const docsInDirectory = (route) => fs.readdirSync(route, 'utf-8');
+
+// Función recursiva para leer un directorio
+const readDirectoriesAndFiles = (route) => {
+  if (!isADirectory(route)) {
+    return [route];
+  }
+  const groupedDocs = docsInDirectory(route);
+  // console.log(groupedDocs, 'docsindirectory');
+  const allFiles = groupedDocs.map(elem => {
+    const completePaths = path.join(route, elem);
+    // console.log(completePaths, 'elem');
+    // console.log(isADirectory(completePaths));
+    return isADirectory(completePaths) ? readDirectoriesAndFiles(completePaths) : completePaths;
+  });
+  // console.log(allFiles, 'allfiles');
+  const cleanFiles = allFiles.flat().filter(file => extensionPath(file) === '.md');
+  // console.log(cleanFiles, 'cleanfiles');
+  return cleanFiles;
+};
+// console.log(readDirectoriesAndFiles('./pruebas'), 'resultado');
+
+// Función para leer solo un archivo que tiene extensión .md
+const readFile = (route) => extensionPath(route) === '.md'
+  ? fs.readFileSync(route, 'utf-8')
+  : 'No se encontraron archivos con extensión .md';
+;
+
+// Extraer links presentes en archivo .md
 const findLinks = (route) => {
   const matcher = /(\[(.*?)\])?\(http(.*?)\)/gm;
   const groupOfLinks = [];
 
   const linksInFile = readFile(route).match(matcher);
   if (linksInFile === null) {
+    console.log(chalk.bgRed(' Error: ') + chalk.red.italic(' No se encontraron links en el/los archivo(s)'));
     return [];
   }
   linksInFile.forEach((elem) => {
@@ -47,21 +79,20 @@ const findLinks = (route) => {
 
 // Función que ingresa el resultado de petición http, en el array de objetos
 const validateLinks = (arrayLinks) => {
-  const groupedLinks = arrayLinks.map(async link => {
-    try {
-      const result = await infoServer(link.href);
-      link.status = result.status;
-      link.ok = result.statusText;
-      return link;
-    } catch (e) {
-      link.status = 502;
-      link.ok = 'Fail';
-      return link;
-    }
-  });
+  const groupedLinks = arrayLinks.map(link =>
+    infoServer(link.href)
+      .then(result => {
+        link.status = result.status;
+        link.ok = result.statusText;
+        return link;
+      }).catch(e => {
+        link.status = 502;
+        link.ok = 'Fail';
+        return link;
+      })
+  );
   return Promise.all(groupedLinks);
 };
-// validateLinks('./pruebas/readmePrueba.md').then(res => console.log(res, 'inValidL'));
 
 // funciones para representar estadísticas del total de links encontrados
 const stats = (arrOfObj) => {
@@ -79,13 +110,11 @@ const brokenStats = (stat, arrOfObj) => {
   stat.Broken = broken.length;
   return stat;
 };
-// console.log(stats(arrObj));
-// console.log(brokenStats(stats(arrObj), arrObj));
 
 module.exports = {
   existPath,
   toAbsolutePath,
-  extensionPath,
+  readDirectoriesAndFiles,
   findLinks,
   validateLinks,
   stats,

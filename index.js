@@ -1,7 +1,7 @@
 const {
   existPath,
-  extensionPath,
   toAbsolutePath,
+  readDirectoriesAndFiles,
   findLinks,
   validateLinks,
   stats,
@@ -10,30 +10,34 @@ const {
 
 const mdLinks = (path, options) => {
   return new Promise((resolve, reject) => {
-    if (existPath(path) === false) {
-      reject(new Error('La ruta ingresada no existe, porfavor ingrese una ruta válida'));
+    if (!existPath(path)) {
+      return reject(new Error('La ruta ingresada no existe, porfavor ingrese una ruta válida'));
     }
-    if (extensionPath(toAbsolutePath(path)) !== '.md') {
-      reject(new Error('No hay archivos con extensión .md'));
-    }
-    const linksInArray = findLinks(toAbsolutePath(path));
+    const directoriesDoc = readDirectoriesAndFiles(toAbsolutePath(path)); // array con paths de archivos .md
+    const resultOfOptions = [];
+    directoriesDoc.forEach(pathDoc => {
+      const linksInArray = findLinks(pathDoc);
+      // console.log(linksInArray, 'linksinarray');
 
-    if (options.validate === true && options.stats === true) {
-      resolve(validateLinks(linksInArray).then((result) => brokenStats(stats(result), result)));
-    }
-    if (options.stats === true) {
-      resolve(validateLinks(linksInArray).then((result) => stats(result)));
-    }
-    if (options.validate === false) {
-      resolve(linksInArray);
-    } else {
-      resolve(validateLinks(linksInArray));
-    }
+      if (options.validate === true && options.stats === true) {
+        return resultOfOptions.push(validateLinks(linksInArray).then((result) => brokenStats(stats(result), result)));
+      }
+      if (options.stats === true) {
+        return resultOfOptions.push(validateLinks(linksInArray).then((result) => stats(result)));
+      }
+      if (options.validate === true) {
+        // console.log(validateLinks(linksInArray), 'validatelinks');
+        return resultOfOptions.push(validateLinks(linksInArray).then(result => result));
+      }
+      return resultOfOptions.push(linksInArray);
+    });
+
+    resolve(Promise.all(resultOfOptions));
   });
 };
 
-// mdLinks('./pruebas/prueba.md', { validate: true })
+// mdLinks('./pruebas', { validate: true, stats: true })
 //   .then((res) => console.log(res, 'mdlinks'))
-//   .catch((e) => console.log(e.message, 'errorMdLink'));
+//   .catch((e) => console.log(e.message));
 
 module.exports = mdLinks;
