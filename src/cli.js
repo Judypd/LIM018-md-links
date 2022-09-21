@@ -14,52 +14,82 @@ if ((args[3] !== undefined && args[3] !== '--validate' && args[3] !== '--stats')
 
 if (args[3] === undefined) {
   mdLinks(args[2], { validate: false })
-    .then(links => links[0].forEach(link =>
+    .then(arrayOfArrays => arrayOfArrays.forEach(arrayOfLinks => arrayOfLinks.forEach(link =>
       console.log(`
  ** LINK FOUND **     
-  ${chalk.blue(args[2])} 
+  ${chalk.blue(link.file)} 
+  ${chalk.cyan(link.text)}
   ${chalk.magenta(link.href)} 
-  ${chalk.cyan(link.text)}`)))
+  `)))
+    )
     .catch(e => console.log(chalk.bgRed(' Error: '), chalk.red.italic(e.message)));
 }
 
 if (args.length === 4 && args[3] === '--validate') {
   mdLinks(args[2], { validate: true })
-    .then(links => links[0].forEach(link =>
+    .then(arrayOfArrays => arrayOfArrays.forEach(arrayOfLinks => arrayOfLinks.forEach(link =>
       console.log(`
-  ** STATUS LINK FOUND **     
-    ${chalk.blue(args[2])} 
-    ${chalk.magenta(link.href)} 
-    ${link.ok === 'OK' ? link.ok : chalk.yellow(link.ok)} ${link.status} 
-    ${chalk.cyan(link.text)}`)))
+ ** STATUS LINK FOUND **     
+  ${chalk.blue(link.file)} 
+  ${chalk.cyan(link.text)}
+  ${chalk.magenta(link.href)} 
+  ${link.ok === 'OK' ? link.ok : chalk.yellow(link.ok)} ${link.status} 
+  `)))
+    )
     .catch(e => console.log(chalk.bgRed(' Error: '), chalk.red.italic(e.message)));
 }
 
 if (args.length === 4 && args[3] === '--stats') {
   mdLinks(args[2], { stats: true })
-    .then(links => links.forEach(link =>
+    .then(links => {
+      const result = {};
+      links.forEach(link => {
+        for (const [key, value] of Object.entries(link)) {
+          if (result[key]) {
+            result[key] += value;
+          } else {
+            result[key] = value;
+          }
+        }
+      }
+      );
       console.log(`
-             S T A T S
-   ============================== 
-       ${chalk.cyan('Total  :  ')}${chalk.blue(link.Total)}
-       ${chalk.cyan('Unique :  ')}${chalk.blue(link.Unique)}
-   ==============================      
-    `))
+           S T A T S
+ ============================== 
+     ${chalk.cyan('Total  :  ')}${chalk.blue(result.Total)}
+     ${chalk.cyan('Unique :  ')}${chalk.blue(result.Unique)}
+ ==============================      
+  `);
+      return result;
+    }
     )
     .catch(e => console.log(chalk.bgRed(' Error: '), chalk.red.italic(e.message)));
 }
 
 if ((args[3] === '--stats' && args[4] === '--validate') || (args[3] === '--validate' && args[4] === '--stats')) {
   mdLinks(args[2], { validate: true, stats: true })
-    .then(links => links.forEach(link =>
+    .then(links => {
+      const result = {};
+      links.forEach(link => {
+        for (const [key, value] of Object.entries(link)) {
+          if (result[key]) {
+            result[key] += value;
+          } else {
+            result[key] = value;
+          }
+        }
+      }
+      );
       console.log(`
-     C O M P L E T E  S T A T S
-   ============================== 
-       ${chalk.cyan('Total    :  ')}${chalk.blue(link.Total)}
-       ${chalk.cyan('Unique   :  ')}${chalk.blue(link.Unique)}
-       ${chalk.yellow('Broken   :  ')}${chalk.yellow(link.Broken)}
-   ==============================        
-      `))
+    C O M P L E T E  S T A T S
+    ============================== 
+      ${chalk.cyan('Total    :  ')}${chalk.blue(result.Total)}
+      ${chalk.cyan('Unique   :  ')}${chalk.blue(result.Unique)}
+      ${chalk.yellow('Broken   :  ')}${chalk.yellow(result.Broken)}
+    ==============================                 
+`);
+      return result;
+    }
     )
     .catch(e => console.log(chalk.bgRed(' Error: '), chalk.red.italic(e.message)));
 }

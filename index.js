@@ -13,7 +13,8 @@ const mdLinks = (path, options) => {
     if (!existPath(path)) {
       return reject(new Error('La ruta ingresada no existe, porfavor ingrese una ruta válida'));
     }
-    const directoriesDoc = readDirectoriesAndFiles(toAbsolutePath(path)); // array con paths de archivos .md
+    const absolutePath = toAbsolutePath(path);
+    const directoriesDoc = readDirectoriesAndFiles(absolutePath); // array con paths de archivos .md
     const resultOfOptions = [];
     directoriesDoc.forEach(pathDoc => {
       const linksInArray = findLinks(pathDoc);
@@ -36,7 +37,7 @@ const mdLinks = (path, options) => {
   });
 };
 
-// mdLinks('./pruebas', { validate: true, stats: true })
+// mdLinks('directory', { validate: false })
 //   .then((res) => console.log(res, 'mdlinks'))
 //   .catch((e) => console.log(e.message));
 

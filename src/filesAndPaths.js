@@ -56,7 +56,7 @@ const findLinks = (route) => {
 
   const linksInFile = readFile(route).match(matcher);
   if (linksInFile === null) {
-    console.log(chalk.bgRed(' Error: ') + chalk.red.italic(' No se encontraron links en el/los archivo(s)'));
+    console.log(chalk.bgRed(' Error: ') + chalk.red.italic(' No se encontraron links en el archivo ' + route));
     return [];
   }
   linksInFile.forEach((elem) => {
