@@ -18,7 +18,6 @@ const mdLinks = (path, options) => {
     const resultOfOptions = [];
     directoriesDoc.forEach(pathDoc => {
       const linksInArray = findLinks(pathDoc);
-      // console.log(linksInArray, 'linksinarray');
 
       if (options.validate === true && options.stats === true) {
         return resultOfOptions.push(validateLinks(linksInArray).then((result) => brokenStats(stats(result), result)));
