@@ -2,6 +2,8 @@ const {
   existPath,
   toAbsolutePath,
   extensionPath,
+  readFile,
+  readDirectoriesAndFiles,
   findLinks,
   validateLinks,
   stats,
@@ -41,6 +43,30 @@ describe('extensionPath', () => {
   });
 });
 
+describe('readFile', () => {
+  it('Should read the content of a .md document', () => {
+    const fileMd = './directory/file/text.md';
+    const result = 'Hola mundo';
+    expect(readFile(fileMd)).toBe(result);
+  });
+  it('Should show a message if document has not a .md extension', () => {
+    const fileTxt = './pruebas/archivo.txt';
+    const result = 'No se encontraron archivos con extensión .md';
+    expect(readFile(fileTxt)).toBe(result);
+  });
+});
+
+describe('readDirectoriesAndFiles', () => {
+  it('Should scan a directory and return an array with paths', () => {
+    const directoryPath = './directory';
+    const result = [
+      'directory\\file\\direct2\\file2\\new.md',
+      'directory\\file\\prueba1.md',
+      'directory\\file\\text.md'];
+    expect(readDirectoriesAndFiles(directoryPath)).toEqual(result);
+  });
+});
+
 describe('findLinks', () => {
   it('Should return an empty array when can not find links', () => {
     const noLinks = './pruebas/prueba2.md';
@@ -52,9 +78,9 @@ describe('findLinks', () => {
     const myPth = './pruebas/prueba.md';
     const result = [
       {
-        href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5',
+        file: './pruebas/prueba.md',
         text: 'The Complete Guide to Status Codes for Meaningful R',
-        file: './pruebas/prueba.md'
+        href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5'
       }
     ];
 
@@ -66,16 +92,16 @@ describe('findLinks', () => {
     const otherPath = './directory/file/prueba1.md';
     const result1 = [
       {
-        href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5',
+        file: './pruebas/prueba.md',
         text: 'The Complete Guide to Status Codes for Meaningful R',
-        file: './pruebas/prueba.md'
+        href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5'
       }
     ];
     const result2 = [
       {
-        href: 'https://nodejs.org/api/path.html',
+        file: './directory/file/prueba1.md',
         text: 'Path',
-        file: './directory/file/prueba1.md'
+        href: 'https://nodejs.org/api/path.html'
       }
     ];
     expect(findLinks(myPth)).toEqual(result1);
@@ -88,16 +114,16 @@ describe('validateLinks', () => {
     axios.get.mockImplementation(() => Promise.resolve({ status: 200, statusText: 'OK' }));
     const linksTest = [
       {
-        href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5',
+        file: 'C:/Users/Carola/OneDrive/Escritorio/Laboratoria/LIM018-md-links/pruebas/prueba.md',
         text: 'The Complete Guide to Status Codes for Meaningful R',
-        file: 'C:/Users/Carola/OneDrive/Escritorio/Laboratoria/LIM018-md-links/pruebas/prueba.md'
+        href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5'
       }
     ];
     return validateLinks(linksTest).then(response => expect(response).toStrictEqual([
       {
-        href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5',
-        text: 'The Complete Guide to Status Codes for Meaningful R',
         file: 'C:/Users/Carola/OneDrive/Escritorio/Laboratoria/LIM018-md-links/pruebas/prueba.md',
+        text: 'The Complete Guide to Status Codes for Meaningful R',
+        href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5',
         status: 200,
         ok: 'OK'
       }
@@ -109,16 +135,16 @@ describe('validateLinks', () => {
     axios.get.mockImplementation(() => Promise.reject());
     const linksTest = [
       {
-        href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5',
+        file: 'C:/Users/Carola/OneDrive/Escritorio/Laboratoria/LIM018-md-links/pruebas/prueba.md',
         text: 'The Complete Guide to Status Codes for Meaningful R',
-        file: 'C:/Users/Carola/OneDrive/Escritorio/Laboratoria/LIM018-md-links/pruebas/prueba.md'
+        href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5'
       }
     ];
     return validateLinks(linksTest).catch((response) => expect(response).toStrictEqual([
       {
-        href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5',
-        text: 'The Complete Guide to Status Codes for Meaningful R',
         file: 'C:/Users/Carola/OneDrive/Escritorio/Laboratoria/LIM018-md-links/pruebas/prueba.md',
+        text: 'The Complete Guide to Status Codes for Meaningful R',
+        href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5',
         status: 502,
         ok: 'Fail'
       }
@@ -130,9 +156,9 @@ describe('stats', () => {
   it('Should return total and unique links', () => {
     const linksTest = [
       {
-        href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5',
+        file: 'C:/Users/Carola/OneDrive/Escritorio/Laboratoria/LIM018-md-links/pruebas/prueba.md',
         text: 'The Complete Guide to Status Codes for Meaningful R',
-        file: 'C:/Users/Carola/OneDrive/Escritorio/Laboratoria/LIM018-md-links/pruebas/prueba.md'
+        href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5'
       }
     ];
     const result = { Total: 1, Unique: 1 };
@@ -145,9 +171,9 @@ describe('brokenStats', () => {
   it('Should return total, unique and broken links', () => {
     const linksTest = [
       {
-        href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5',
+        file: 'C:/Users/Carola/OneDrive/Escritorio/Laboratoria/LIM018-md-links/pruebas/prueba.md',
         text: 'The Complete Guide to Status Codes for Meaningful R',
-        file: 'C:/Users/Carola/OneDrive/Escritorio/Laboratoria/LIM018-md-links/pruebas/prueba.md'
+        href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5'
       }
     ];
     const statLinks = stats(linksTest);

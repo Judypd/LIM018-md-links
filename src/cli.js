@@ -8,20 +8,23 @@ const args = process.argv;
 // args[1] ruta de md-links
 // args[2] ruta del archivo
 
-if ((args[3] !== undefined && args[3] !== '--validate' && args[3] !== '--stats')) {
+// if (args[2] === undefined) {
+//   console.log(chalk.bgRed.italic(' Error: Por favor ingrese la ruta al archivo o directorio que desea revisar'));
+// }
+if ((args[3] !== '--validate' && args[3] !== '--stats') ||
+ (args[4] !== '--validate' && args[4] !== '--stats')) {
   console.log(chalk.bgRed.italic(' Error: Por favor ingrese una opción válida'));
 }
 
 if (args[3] === undefined) {
   mdLinks(args[2], { validate: false })
-    .then(arrayOfArrays => arrayOfArrays.forEach(arrayOfLinks => arrayOfLinks.forEach(link =>
+    .then(links => links.forEach(link =>
       console.log(`
  ** LINK FOUND **     
   ${chalk.blue(link.file)} 
   ${chalk.cyan(link.text)}
   ${chalk.magenta(link.href)} 
   `)))
-    )
     .catch(e => console.log(chalk.bgRed(' Error: '), chalk.red.italic(e.message)));
 }
 

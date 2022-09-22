@@ -34,9 +34,9 @@ describe('mdLinks', () => {
     const links = [
       [
         {
-          href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5',
-          text: 'The Complete Guide to Status Codes for Meaningful R',
           file: 'C:\\Users\\Carola\\OneDrive\\Escritorio\\Laboratoria\\LIM018-md-links\\pruebas\\prueba.md',
+          text: 'The Complete Guide to Status Codes for Meaningful R',
+          href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5',
           status: 200,
           ok: 'OK'
         }
@@ -49,13 +49,12 @@ describe('mdLinks', () => {
   it('If validate are false, should return promise resolve with an array with link objects', () => {
     axios.get.mockImplementation(() => Promise.resolve({ status: 200, statusText: 'OK' }));
     const links = [
-      [
-        {
-          href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5',
-          text: 'The Complete Guide to Status Codes for Meaningful R',
-          file: 'C:\\Users\\Carola\\OneDrive\\Escritorio\\Laboratoria\\LIM018-md-links\\pruebas\\prueba.md'
-        }
-      ]
+      {
+        file: 'C:\\Users\\Carola\\OneDrive\\Escritorio\\Laboratoria\\LIM018-md-links\\pruebas\\prueba.md',
+        text: 'The Complete Guide to Status Codes for Meaningful R',
+        href: 'https://dev.to/khaosdoctor/the-complete-guide-to-status-codes-for-meaningful-rest-apis-1-5c5'
+      }
+
     ];
     const onePath = './pruebas/prueba.md';
     mdLinks(onePath, { validate: false }).then(result => expect(result).toStrictEqual(links));

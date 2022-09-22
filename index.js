@@ -33,11 +33,11 @@ const mdLinks = (path, options) => {
       return resultOfOptions.push(linksInArray);
     });
 
-    resolve(Promise.all(resultOfOptions));
+    resolve(Promise.all(resultOfOptions.flat()));
   });
 };
 
-// mdLinks('directory', { validate: false })
+// mdLinks('directory', { validate: true })
 //   .then((res) => console.log(res, 'mdlinks'))
 //   .catch((e) => console.log(e.message));
 

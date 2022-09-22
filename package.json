@@ -15,6 +15,7 @@
     "pretest": "npm run eslint",
     "test": "jest --coverage --verbose"
   },
+  "license": "ISC",
   "bin": {
     "md-links": "./src/cli.js"
   },

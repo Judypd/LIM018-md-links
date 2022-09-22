@@ -3,7 +3,6 @@ const path = require('path');
 const infoServer = require('./informationServer.js');
 const chalk = require('chalk');
 
-// const rutaDir = './directory/file';
 // Función para verificar si la ruta existe
 const existPath = (route) => fs.existsSync(route);
 
@@ -29,19 +28,14 @@ const readDirectoriesAndFiles = (route) => {
     return [route];
   }
   const groupedDocs = docsInDirectory(route);
-  // console.log(groupedDocs, 'docsindirectory');
   const allFiles = groupedDocs.map(elem => {
     const completePaths = path.join(route, elem);
-    // console.log(completePaths, 'elem');
-    // console.log(isADirectory(completePaths));
     return isADirectory(completePaths) ? readDirectoriesAndFiles(completePaths) : completePaths;
   });
-  // console.log(allFiles, 'allfiles');
   const cleanFiles = allFiles.flat().filter(file => extensionPath(file) === '.md');
-  // console.log(cleanFiles, 'cleanfiles');
+
   return cleanFiles;
 };
-// console.log(readDirectoriesAndFiles('./pruebas'), 'resultado');
 
 // Función para leer solo un archivo que tiene extensión .md
 const readFile = (route) => extensionPath(route) === '.md'
@@ -68,9 +62,9 @@ const findLinks = (route) => {
     const file = route;
 
     const link = {
-      href,
+      file,
       text: correctText,
-      file
+      href
     };
     groupOfLinks.push(link);
   });
@@ -114,6 +108,8 @@ const brokenStats = (stat, arrOfObj) => {
 module.exports = {
   existPath,
   toAbsolutePath,
+  extensionPath,
+  readFile,
   readDirectoriesAndFiles,
   findLinks,
   validateLinks,
