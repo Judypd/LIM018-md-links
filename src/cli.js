@@ -7,14 +7,16 @@ const args = process.argv;
 // args[0] es la ruta node
 // args[1] ruta de md-links
 // args[2] ruta del archivo
+// args[3] opción --validate o --stats
+const thePath = args[2];
 
-if (args[2] === undefined) {
-  console.log(chalk.blue.italic(' Por favor ingrese la ruta al archivo o directorio que desea revisar'));
-  console.log(chalk.blue.italic('* Para mayor información escriba --help, para revisar las opciones *'));
+if (thePath === undefined) {
+  console.log(chalk.cyan.italic(' Por favor ingrese la ruta al archivo o directorio que desea analizar'));
+  console.log(chalk.cyan.italic('* Para mayor información escriba --help, para revisar las opciones *'));
 }
 
 if (args.length === 3 && args[3] === undefined) {
-  mdLinks(args[2], { validate: false })
+  mdLinks(thePath, { validate: false })
     .then(links => links.forEach(link =>
       console.log(`
     ** LINK FOUND **     
@@ -22,16 +24,16 @@ if (args.length === 3 && args[3] === undefined) {
     ${chalk.cyan(link.text)}
     ${chalk.magenta(link.href)} 
     `)))
-    .catch(e => console.log(chalk.bgRed(' Error: '), chalk.red.italic(e.message)));
+    .catch(e => console.log(chalk.bgRed(' * '), chalk.red.italic(e.message)));
 }
 
-if ((args.length === 4 && args[3] !== '--validate' && args[3] !== '--stats') ||
-   (args.length === 4 && args[4] !== '--validate' && args[4] !== '--stats')) {
-  console.log(chalk.bgRed.italic(' Error: Por favor ingrese una opción válida'));
+if (!(args.includes('--validate') || args.includes('--stats') || args.includes('--help')) && args.length === 4) {
+  console.log(chalk.bgRed(' * '), chalk.italic('Por favor ingrese una opción válida'));
+  console.log(chalk.cyan.italic('* Para mayor información escriba --help, para revisar las opciones *'));
 }
 
 if (args.length === 4 && args[3] === '--validate') {
-  mdLinks(args[2], { validate: true })
+  mdLinks(thePath, { validate: true })
     .then(arrayOfArrays => arrayOfArrays.forEach(arrayOfLinks => arrayOfLinks.forEach(link =>
       console.log(`
  ** STATUS LINK FOUND **     
@@ -41,11 +43,11 @@ if (args.length === 4 && args[3] === '--validate') {
   ${link.ok === 'OK' ? link.ok : chalk.yellow(link.ok)} ${link.status} 
   `)))
     )
-    .catch(e => console.log(chalk.bgRed(' Error: '), chalk.red.italic(e.message)));
+    .catch(e => console.log(chalk.bgRed(' * '), chalk.red.italic(e.message)));
 }
 
 if (args.length === 4 && args[3] === '--stats') {
-  mdLinks(args[2], { stats: true })
+  mdLinks(thePath, { stats: true })
     .then(links => {
       const result = {};
       links.forEach(link => {
@@ -68,11 +70,11 @@ if (args.length === 4 && args[3] === '--stats') {
       return result;
     }
     )
-    .catch(e => console.log(chalk.bgRed(' Error: '), chalk.red.italic(e.message)));
+    .catch(e => console.log(chalk.bgRed(' * '), chalk.red.italic(e.message)));
 }
 
-if ((args[3] === '--stats' && args[4] === '--validate') || (args[3] === '--validate' && args[4] === '--stats')) {
-  mdLinks(args[2], { validate: true, stats: true })
+if (args.includes('--validate') && args.includes('--stats')) {
+  mdLinks(thePath, { validate: true, stats: true })
     .then(links => {
       const result = {};
       links.forEach(link => {
@@ -96,5 +98,37 @@ if ((args[3] === '--stats' && args[4] === '--validate') || (args[3] === '--valid
       return result;
     }
     )
-    .catch(e => console.log(chalk.bgRed(' Error: '), chalk.red.italic(e.message)));
+    .catch(e => console.log(chalk.bgRed(' * '), chalk.red.italic(e.message)));
+}
+
+if (args.includes('--help')) {
+  console.log(`
+    ${chalk.cyan(`                                  ${chalk.bgCyan('*** md-links-judypd ***')}
+
+        Necesitas ayuda? Revisa las siguientes opciones:
+
+                      Entrada                   ║                          Salida                             
+     ═══════════════════════════════════════════║═══════════════════════════════════════════════════════
+        md-links  path                          ║   file: ruta del archivo donde se encontró el link 
+        ej.                                     ║   text: Texto qe aparecía dentro del link
+          md-links directory/archivo.md         ║   href: URL encontrada                                          
+     ═══════════════════════════════════════════║═══════════════════════════════════════════════════════
+        md-links  path  --validate              ║   file: ruta del archivo donde se encontró el link
+       *                                        ║   text: Texto qe aparecía dentro del link 
+         Para saber el status de los links      ║   href: URL encontrada 
+         haciendo consultas HTTP con axios      ║   status: código de respuesta HTTP
+                                                ║   ok: OK en caso de éxito o FAIL en caso de fallo                             
+     ═══════════════════════════════════════════║═══════════════════════════════════════════════════════
+       md-links  path  --stats                  ║   Total: cantidad total de los links encontrados
+       *                                        ║   Unique: cantidad de links únicos 
+         Para obtener estadísticas de los links ║   
+         totales y únicos encontrados           ║                                               
+     ═══════════════════════════════════════════║═══════════════════════════════════════════════════════
+       md-links  path  --stats  --validate      ║   Total: cantidad total de los links encontrados
+       *                                        ║   Unique: cantidad de links únicos
+         Para obtener estadísticas de los links ║   Broken: cantidad de links rotos
+         totales, únicos y rotos encontrados    ║                        
+     ═══════════════════════════════════════════║═════════════════════════════════════════════════════════
+    `)}  
+  `);
 }
