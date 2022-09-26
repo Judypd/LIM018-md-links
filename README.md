@@ -1,10 +1,10 @@
-[Markdown Links](./img/logo-mdLinks.png)
+![Markdown Links](./img/logo-mdLinks.png)
 
 Md-links es una biblioteca creada usando node.js que lee y analiza todos los archivos de tipo markdown que pueden estar alojados en carpetas y extrae los links encontrados en dichos archivos. Adicionalmente se puede validar el estado de los links y mostrar algunas estadísticas en relación a ello.
 Consta de una interfaz (API), así como un ejecutable de línea de comando (CLI). 
 
 * Diagrama de flujo:
-[Diagrama de Flujo](./img/Diagrama%20de%20Flujo%20md_links_1.drawio.png)
+![Diagrama de Flujo](./img/Diagrama%20de%20Flujo%20md_links_1.drawio.png)
 # Markdown Links
 # Índice
 
