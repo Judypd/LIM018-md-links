@@ -8,6 +8,7 @@ const args = process.argv;
 // args[1] ruta de md-links
 // args[2] ruta del archivo
 // args[3] opción --validate o --stats
+
 const thePath = args[2];
 
 if (thePath === undefined) {
@@ -88,7 +89,7 @@ if (args.includes('--validate') && args.includes('--stats')) {
       }
       );
       console.log(`
-    C O M P L E T E  S T A T S
+      C O M P L E T E  S T A T S
     ============================== 
       ${chalk.cyan('Total    :  ')}${chalk.blue(result.Total)}
       ${chalk.cyan('Unique   :  ')}${chalk.blue(result.Unique)}

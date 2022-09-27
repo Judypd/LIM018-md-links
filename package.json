@@ -1,6 +1,6 @@
 {
   "name": "md-links-judypd",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "librería para buscar links y su estado de validez o error en documentos markdow",
   "author": {
     "name": "Carolina Palacios <palacios.carolina0@gmail.com>",
@@ -32,7 +32,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/npm/cli.git.CAMBIAR"
+    "url": "https://github.com/Judypd/LIM018-md-links"
   },
   "devDependencies": {
     "@babel/core": "^7.18.13",

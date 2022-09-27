@@ -11,9 +11,9 @@ Consta de una interfaz (API), así como un ejecutable de línea de comando (CLI)
 
 # Guía de Uso:
 Para ejecutar la línea de comandos en la terminal se debe utilizar el siguiente formato:
-   `md-links <path-to-file> [options]`
+   `md-links <path> [options]`
 
-  * `<path-to-file>`: es la ruta del archivo o directorio. Si ingresa solo la ruta del archivo o directorio obtendrá información general sobre los links encontrados en los archivo, en el siguiente formato:
+  * `<path>`: es la ruta absoluta o relativa del archivo o directorio. Si ingresa solo la ruta del archivo o directorio obtendrá información general sobre los links encontrados en los archivo, en el siguiente formato:
   href (URL encontrada), text (Texto que aparecía dentro del link), file (ruta del archivo donde se encontró
   el link) 
 
@@ -27,10 +27,40 @@ Para ejecutar la línea de comandos en la terminal se debe utilizar el siguiente
 
    `--help`: información y ayuda sobre los comandos.
 
+  * En caso la ruta no exista, se mostrará un mensaje de error:
+   `La ruta ingresada no existe, porfavor ingrese una ruta válida`
+
+  * Si no se proporciona ninguna ruta en la terminal, se mostratrá el siguiente mensaje:
+   `Por favor ingrese la ruta al archivo o directorio que desea analizar, para mayor información    escriba --help, para revisar las opciones`
+
+  * Si no se encuentra ningún enlace en el/los archivos analizados, se mostrará el siguiente   mensaje:
+   `No se encontraron links en el archivo <path>`
+
 # Ejemplos de Uso:
 
+* `md-links --help`
+![help](./img/md-links-help2.png)
 
+* `md-links <path>`
+![validate false](./img/validate-false.jpg)
 
+* `md-links <path> --validate`
+![validate true](./img/validate-true.jpg)
+
+* `md-links <path> --stats`
+![statistics](./img/md-links-stats.png)
+
+* `md-links <path> --validate --stats`
+![validate and stats](./img/validate-stats.png)
+
+* `<path> no existe`
+![path doesn't exist](./img/path-not-exist.png)
+
+* `<path> no especificado`
+![no path](./img/md-links-message-help.png)
+
+* `No se encontraron links en el archivo`
+![no links](./img/no-links-in-file.png)
 
 
 # Markdown Links
