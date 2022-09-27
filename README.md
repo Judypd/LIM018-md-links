@@ -1,10 +1,38 @@
 ![Markdown Links](./img/logo-mdLinks.png)
 
 Md-links es una biblioteca creada usando node.js que lee y analiza todos los archivos de tipo markdown que pueden estar alojados en carpetas y extrae los links encontrados en dichos archivos. Adicionalmente se puede validar el estado de los links y mostrar algunas estadísticas en relación a ello.
-Consta de una interfaz (API), así como un ejecutable de línea de comando (CLI). 
+Consta de una interfaz (API), así como un ejecutable de línea de comando (CLI).
 
-* Diagrama de flujo:
+# Diagrama de flujo:
 ![Diagrama de Flujo](./img/Diagrama%20de%20Flujo%20md_links_1.drawio.png)
+
+# Instalación:
+   `npm i md-links-judypd -g`
+
+# Guía de Uso:
+Para ejecutar la línea de comandos en la terminal se debe utilizar el siguiente formato:
+   `md-links <path-to-file> [options]`
+
+  * `<path-to-file>`: es la ruta del archivo o directorio. Si ingresa solo la ruta del archivo o directorio obtendrá información general sobre los links encontrados en los archivo, en el siguiente formato:
+  href (URL encontrada), text (Texto que aparecía dentro del link), file (ruta del archivo donde se encontró
+  el link) 
+
+  * `[options]`:  opciones para obtener los resultados, son las siguientes:
+
+   `--validate`: Peticiones HTTP con axios, obtendrá la información con el siguiente formato: href (URL encontrada), text (Texto que aparecía dentro del link), file (ruta del archivo donde se encontró el link), status (código de respuesta HTTP), ok (OK en caso de éxito o FAIL en caso de fallo).
+
+   `--stats`: Estadísticas de links totales y únicos, con el siguiente formato: Total (cantidad total de los links encontrados) y Unique (cantidad de links únicos).
+
+   `--validate --stats`: Estadísticas de links totales, únicos y rotos, con el siguiente formato: Total (cantidad total de los links encontrados), Unique (cantidad de links únicos)  y Broken (cantidad de links rotos).
+
+   `--help`: información y ayuda sobre los comandos.
+
+# Ejemplos de Uso:
+
+
+
+
+
 # Markdown Links
 # Índice
 
