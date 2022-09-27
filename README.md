@@ -1,5 +1,6 @@
 ![Markdown Links](./img/logo-mdLinks.png)
 
+# Descripción:
 Md-links es una biblioteca creada usando node.js que lee y analiza todos los archivos de tipo markdown que pueden estar alojados en carpetas y extrae los links encontrados en dichos archivos. Adicionalmente se puede validar el estado de los links y mostrar algunas estadísticas en relación a ello.
 Consta de una interfaz (API), así como un ejecutable de línea de comando (CLI).
 
@@ -11,30 +12,34 @@ Consta de una interfaz (API), así como un ejecutable de línea de comando (CLI)
 
 # Guía de Uso:
 Para ejecutar la línea de comandos en la terminal se debe utilizar el siguiente formato:
+
    `md-links <path> [options]`
 
-  * `<path>`: es la ruta absoluta o relativa del archivo o directorio. Si ingresa solo la ruta del archivo o directorio obtendrá información general sobre los links encontrados en los archivo, en el siguiente formato:
-  href (URL encontrada), text (Texto que aparecía dentro del link), file (ruta del archivo donde se encontró
-  el link) 
 
-  * `[options]`:  opciones para obtener los resultados, son las siguientes:
+* `<path>`: es la ruta absoluta o relativa del archivo o directorio. Si ingresa solo la ruta del archivo o directorio obtendrá información general sobre los links encontrados en los archivo, en el siguiente formato:
+href (URL encontrada), text (Texto que aparecía dentro del link), file (ruta del archivo donde se encontró el link) 
 
-   - `--validate`: Peticiones HTTP con axios, obtendrá la información con el siguiente formato: href (URL encontrada), text (Texto que aparecía dentro del link), file (ruta del archivo donde se encontró el link), status (código de respuesta HTTP), ok (OK en caso de éxito o FAIL en caso de fallo).
+* `[options]`:  opciones para obtener los resultados, son las siguientes:
 
-   - `--stats`: Estadísticas de links totales y únicos, con el siguiente formato: Total (cantidad total de los links encontrados) y Unique (cantidad de links únicos).
+    `--validate`: Peticiones HTTP con axios, obtendrá la información con el siguiente formato: href (URL encontrada), text (Texto que aparecía dentro del link), file (ruta del archivo donde se encontró el link), status (código de respuesta HTTP), ok (OK en caso de éxito o FAIL en caso de fallo).
 
-   - `--validate --stats`: Estadísticas de links totales, únicos y rotos, con el siguiente formato: Total (cantidad total de los links encontrados), Unique (cantidad de links únicos)  y Broken (cantidad de links rotos).
+    `--stats`: Estadísticas de links totales y únicos, con el siguiente formato: Total (cantidad total de los links encontrados) y Unique (cantidad de links únicos).
 
-   - `--help`: información y ayuda sobre los comandos.
+    `--validate --stats`: Estadísticas de links totales, únicos y rotos, con el siguiente formato: Total (cantidad total de los links encontrados), Unique (cantidad de links únicos)  y Broken (cantidad de links rotos).
 
-  * En caso la ruta no exista, se mostrará un mensaje de error:
-   - `La ruta ingresada no existe, porfavor ingrese una ruta válida`
+    `--help`: información y ayuda sobre los comandos.
 
-  * Si no se proporciona ninguna ruta en la terminal, se mostratrá el siguiente mensaje:
-   - `Por favor ingrese la ruta al archivo o directorio que desea analizar, para mayor información    escriba --help, para revisar las opciones`
+* En caso la ruta no exista, se mostrará un mensaje de error:
 
-  * Si no se encuentra ningún enlace en el/los archivos analizados, se mostrará el siguiente   mensaje:
-   - `No se encontraron links en el archivo <path>`
+    `La ruta ingresada no existe, porfavor ingrese una ruta válida`
+
+* Si no se proporciona ninguna ruta en la terminal, se mostratrá el siguiente mensaje:
+
+    `Por favor ingrese la ruta al archivo o directorio que desea analizar, para mayor información    escriba --help, para revisar las opciones`
+
+* Si no se encuentra ningún enlace en el/los archivos analizados, se mostrará el siguiente   mensaje:
+
+    `No se encontraron links en el archivo <path>`
 
 # Ejemplos de Uso:
 
