@@ -19,47 +19,55 @@ Para ejecutar la línea de comandos en la terminal se debe utilizar el siguiente
 
   * `[options]`:  opciones para obtener los resultados, son las siguientes:
 
-   `--validate`: Peticiones HTTP con axios, obtendrá la información con el siguiente formato: href (URL encontrada), text (Texto que aparecía dentro del link), file (ruta del archivo donde se encontró el link), status (código de respuesta HTTP), ok (OK en caso de éxito o FAIL en caso de fallo).
+   - `--validate`: Peticiones HTTP con axios, obtendrá la información con el siguiente formato: href (URL encontrada), text (Texto que aparecía dentro del link), file (ruta del archivo donde se encontró el link), status (código de respuesta HTTP), ok (OK en caso de éxito o FAIL en caso de fallo).
 
-   `--stats`: Estadísticas de links totales y únicos, con el siguiente formato: Total (cantidad total de los links encontrados) y Unique (cantidad de links únicos).
+   - `--stats`: Estadísticas de links totales y únicos, con el siguiente formato: Total (cantidad total de los links encontrados) y Unique (cantidad de links únicos).
 
-   `--validate --stats`: Estadísticas de links totales, únicos y rotos, con el siguiente formato: Total (cantidad total de los links encontrados), Unique (cantidad de links únicos)  y Broken (cantidad de links rotos).
+   - `--validate --stats`: Estadísticas de links totales, únicos y rotos, con el siguiente formato: Total (cantidad total de los links encontrados), Unique (cantidad de links únicos)  y Broken (cantidad de links rotos).
 
-   `--help`: información y ayuda sobre los comandos.
+   - `--help`: información y ayuda sobre los comandos.
 
   * En caso la ruta no exista, se mostrará un mensaje de error:
-   `La ruta ingresada no existe, porfavor ingrese una ruta válida`
+   - `La ruta ingresada no existe, porfavor ingrese una ruta válida`
 
   * Si no se proporciona ninguna ruta en la terminal, se mostratrá el siguiente mensaje:
-   `Por favor ingrese la ruta al archivo o directorio que desea analizar, para mayor información    escriba --help, para revisar las opciones`
+   - `Por favor ingrese la ruta al archivo o directorio que desea analizar, para mayor información    escriba --help, para revisar las opciones`
 
   * Si no se encuentra ningún enlace en el/los archivos analizados, se mostrará el siguiente   mensaje:
-   `No se encontraron links en el archivo <path>`
+   - `No se encontraron links en el archivo <path>`
 
 # Ejemplos de Uso:
 
-* `md-links --help`
+## `md-links --help`
+
 ![help](./img/md-links-help2.png)
 
-* `md-links <path>`
+## `md-links <path>`
+
 ![validate false](./img/validate-false.jpg)
 
-* `md-links <path> --validate`
+## `md-links <path> --validate`
+
 ![validate true](./img/validate-true.jpg)
 
-* `md-links <path> --stats`
+## `md-links <path> --stats`
+
 ![statistics](./img/md-links-stats.png)
 
-* `md-links <path> --validate --stats`
+## `md-links <path> --validate --stats`
+
 ![validate and stats](./img/validate-stats.png)
 
-* `<path> no existe`
+## `<path> no existe`
+
 ![path doesn't exist](./img/path-not-exist.png)
 
-* `<path> no especificado`
+## `<path> no especificado`
+
 ![no path](./img/md-links-message-help.png)
 
-* `No se encontraron links en el archivo`
+## `No se encontraron links en el archivo`
+
 ![no links](./img/no-links-in-file.png)
 
 
